@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eli Podcast Productions | Turning Your Passion Into a Polished Podcast</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loading-screen">
+        <div class="sound-wave-animation"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="/">
+                    <img src="images/eli-podcast-logo.svg" alt="Eli Podcast Productions">
+                </a>
+            </div>
+            <nav class="main-navigation">
+                <ul>
+                    <li><a href="/services">Services</a></li>
+                    <li><a href="/portfolio">Portfolio</a></li>
+                    <li><a href="/process">Process</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/blog">Blog</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-cta">
+                <a href="/contact" class="button primary-button">Start Your Podcast</a>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section - Split Screen -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="animate-text">Your Voice, Professionally Elevated</h1>
+                    <p class="hero-tagline">Turning Your Passion Into a Polished Podcast</p>
+                    <div class="hero-cta">
+                        <a href="/contact" class="button primary-button">Schedule a Consultation</a>
+                        <a href="/portfolio" class="button secondary-button">View Our Work</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="studio-visual">
+                        <img src="images/studio-visual.webp" alt="Minimalist podcast studio">
+                    </div>
+                    <div class="sound-wave-animation interactive" data-cursor-interactive></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Value Proposition -->
+        <section class="value-proposition">
+            <div class="container">
+                <h2 class="section-title">End-to-End Podcast Excellence</h2>
+                <p class="section-subtitle">We handle the technical details so you can focus on creating amazing content</p>
+                
+                <div class="value-cards">
+                    <div class="value-card" data-animation="fade-up">
+                        <div class="icon-container">
+                            <div class="animated-icon" data-icon="quality"></div>
+                        </div>
+                        <h3>Professional Quality</h3>
+                        <p>Studio-grade production without the complexity or learning curve</p>
+                    </div>
+                    
+                    <div class="value-card" data-animation="fade-up" data-delay="0.2">
+                        <div class="icon-container">
+                            <div class="animated-icon" data-icon="time"></div>
+                        </div>
+                        <h3>Time Savings</h3>
+                        <p>Focus solely on content creation while we handle everything else</p>
+                    </div>
+                    
+                    <div class="value-card" data-animation="fade-up" data-delay="0.4">
+                        <div class="icon-container">
+                            <div class="animated-icon" data-icon="service"></div>
+                        </div>
+                        <h3>End-to-End Service</h3>
+                        <p>One partner for your entire podcast journey, from concept to distribution</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Service Categories - Horizontal Scroll -->
+        <section class="services-section">
+            <div class="container">
+                <h2 class="section-title">Our Services</h2>
+                <p class="section-subtitle">Comprehensive solutions for every aspect of podcast production</p>
+            </div>
+            
+            <div class="horizontal-scroll-container">
+                <div class="services-cards">
+                    <div class="service-card">
+                        <div class="service-icon" data-icon="setup"></div>
+                        <h3>Podcast Setup</h3>
+                        <ul>
+                            <li>Name selection</li>
+                            <li>Platform establishment</li>
+                            <li>Logo development</li>
+                            <li>Intro/outro production</li>
+                            <li>Trailer creation</li>
+                        </ul>
+                        <a href="/services#setup" class="text-link">Learn more</a>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon" data-icon="production"></div>
+                        <h3>Episode Production</h3>
+                        <ul>
+                            <li>Audio editing</li>
+                            <li>Sound enhancement</li>
+                            <li>Show notes creation</li>
+                            <li>Custom artwork</li>
+                            <li>Publishing management</li>
+                        </ul>
+                        <a href="/services#production" class="text-link">Learn more</a>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon" data-icon="website"></div>
+                        <h3>Website Integration</h3>
+                        <ul>
+                            <li>Podcast embedding</li>
+                            <li>Digital presence strategy</li>
+                            <li>Listener experience optimization</li>
+                            <li>SEO implementation</li>
+                            <li>Analytics integration</li>
+                        </ul>
+                        <a href="/services#integration" class="text-link">Learn more</a>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon" data-icon="consultation"></div>
+                        <h3>Consultation Services</h3>
+                        <ul>
+                            <li>Strategy development</li>
+                            <li>Technical training</li>
+                            <li>Content planning</li>
+                            <li>Audience growth</li>
+                            <li>Monetization guidance</li>
+                        </ul>
+                        <a href="/services#consultation" class="text-link">Learn more</a>
+                    </div>
+                </div>
+                
+                <div class="scroll-indicators">
+                    <button class="scroll-left" aria-label="Scroll left"></button>
+                    <div class="scroll-dots"></div>
+                    <button class="scroll-right" aria-label="Scroll right"></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Work -->
+        <section class="portfolio-section">
+            <div class="container">
+                <h2 class="section-title">Featured Work</h2>
+                <p class="section-subtitle">Real results for podcasters just like you</p>
+                
+                <div class="portfolio-filters">
+                    <button class="filter-button active" data-filter="all">All Projects</button>
+                    <button class="filter-button" data-filter="religious">Religious</button>
+                    <button class="filter-button" data-filter="educational">Educational</button>
+                    <button class="filter-button" data-filter="business">Business</button>
+                </div>
+                
+                <div class="portfolio-grid">
+                    <div class="portfolio-item" data-category="religious">
+                        <div class="portfolio-image">
+                            <img src="images/portfolio/prism-of-torah.webp" alt="Prism of Torah Podcast">
+                            <div class="portfolio-overlay">
+                                <div class="waveform-visualization" data-audio="audio/prism-sample.mp3"></div>
+                                <button class="play-button" aria-label="Play audio sample"></button>
+                            </div>
+                        </div>
+                        <h3>Prism of Torah</h3>
+                        <p>Complete podcast transformation with professional audio and brand development</p>
+                        <a href="/portfolio/prism-of-torah" class="text-link">View case study</a>
+                    </div>
+                    
+                    <div class="portfolio-item" data-category="religious">
+                        <div class="portfolio-image">
+                            <img src="images/portfolio/emes-of-torah.webp" alt="Emes of Torah Podcast">
+                            <div class="portfolio-overlay">
+                                <div class="waveform-visualization" data-audio="audio/emes-sample.mp3"></div>
+                                <button class="play-button" aria-label="Play audio sample"></button>
+                            </div>
+                        </div>
+                        <h3>Emes of Torah</h3>
+                        <p>From concept to execution, establishing professional presence across platforms</p>
+                        <a href="/portfolio/emes-of-torah" class="text-link">View case study</a>
+                    </div>
+                    
+                    <div class="portfolio-item" data-category="educational">
+                        <div class="portfolio-image">
+                            <img src="images/portfolio/learning-journey.webp" alt="The Learning Journey Podcast">
+                            <div class="portfolio-overlay">
+                                <div class="waveform-visualization" data-audio="audio/learning-sample.mp3"></div>
+                                <button class="play-button" aria-label="Play audio sample"></button>
+                            </div>
+                        </div>
+                        <h3>The Learning Journey</h3>
+                        <p>Educational podcast with comprehensive production and distribution strategy</p>
+                        <a href="/portfolio/learning-journey" class="text-link">View case study</a>
+                    </div>
+                    
+                    <div class="portfolio-item" data-category="business">
+                        <div class="portfolio-image">
+                            <img src="images/portfolio/startup-insights.webp" alt="Startup Insights Podcast">
+                            <div class="portfolio-overlay">
+                                <div class="waveform-visualization" data-audio="audio/startup-sample.mp3"></div>
+                                <button class="play-button" aria-label="Play audio sample"></button>
+                            </div>
+                        </div>
+                        <h3>Startup Insights</h3>
+                        <p>Business thought leadership podcast with professional production quality</p>
+                        <a href="/portfolio/startup-insights" class="text-link">View case study</a>
+                    </div>
+                </div>
+                
+                <div class="portfolio-cta">
+                    <a href="/portfolio" class="button secondary-button">View Full Portfolio</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Client Testimonials -->
+        <section class="testimonials-section">
+            <div class="container">
+                <h2 class="section-title">Client Experiences</h2>
+                <p class="section-subtitle">Don't take our word for it</p>
+                
+                <div class="testimonials-slider">
+                    <div class="testimonial-slides">
+                        <div class="testimonial-slide active">
+                            <blockquote>
+                                <p>"Working with Eli transformed our simple recordings into a professional podcast. The attention to detail and technical expertise were exactly what we needed to focus on our content instead of the production."</p>
+                                <cite>
+                                    <span class="client-name">Rabbi Michael Stern</span>
+                                    <span class="client-title">Prism of Torah Podcast</span>
+                                </cite>
+                            </blockquote>
+                        </div>
+                        
+                        <div class="testimonial-slide">
+                            <blockquote>
+                                <p>"Eli's comprehensive approach eliminated all the technical hurdles that prevented me from sharing valuable content. From day one, I felt like I had a true partner in my podcasting journey."</p>
+                                <cite>
+                                    <span class="client-name">David Cohen</span>
+                                    <span class="client-title">Emes of Torah Podcast</span>
+                                </cite>
+                            </blockquote>
+                        </div>
+                        
+                        <div class="testimonial-slide">
+                            <blockquote>
+                                <p>"The quality and consistency Eli brings to our production has been instrumental in growing our audience. Our listeners frequently comment on the professional sound and seamless experience."</p>
+                                <cite>
+                                    <span class="client-name">Sarah Goldstein</span>
+                                    <span class="client-title">The Learning Journey Podcast</span>
+                                </cite>
+                            </blockquote>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-controls">
+                        <button class="testimonial-dot active" data-slide="0" aria-label="Testimonial 1"></button>
+                        <button class="testimonial-dot" data-slide="1" aria-label="Testimonial 2"></button>
+                        <button class="testimonial-dot" data-slide="2" aria-label="Testimonial 3"></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call-to-Action -->
+        <section class="cta-section">
+            <div class="parallax-background"></div>
+            <div class="container">
+                <h2 class="section-title">Ready to Elevate Your Podcast?</h2>
+                <p class="section-subtitle">Schedule a free consultation to discuss your podcast vision</p>
+                <div class="cta-buttons">
+                    <a href="/contact" class="button primary-button">Schedule Your Consultation</a>
+                    <a href="/process" class="button secondary-button">Learn Our Process</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-upper">
+            <div class="container">
+                <div class="footer-newsletter">
+                    <h3>Stay Updated</h3>
+                    <p>Subscribe for podcast production tips and industry insights</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit" class="button primary-button">Subscribe</button>
+                    </form>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-links-column">
+                        <h4>Services</h4>
+                        <ul>
+                            <li><a href="/services#setup">Podcast Setup</a></li>
+                            <li><a href="/services#production">Episode Production</a></li>
+                            <li><a href="/services#integration">Website Integration</a></li>
+                            <li><a href="/services#consultation">Consultation</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-links-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="/about">About</a></li>
+                            <li><a href="/portfolio">Portfolio</a></li>
+                            <li><a href="/process">Process</a></li>
+                            <li><a href="/blog">Blog</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-links-column">
+                        <h4>Connect</h4>
+                        <ul>
+                            <li><a href="/contact">Contact</a></li>
+                            <li><a href="/faq">FAQs</a></li>
+                            <li><a href="/resources">Resources</a></li>
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-lower">
+            <div class="container">
+                <div class="copyright">
+                    <p>&copy; 2025 Eli Podcast Productions. All rights reserved.</p>
+                </div>
+                
+                <div class="social-links">
+                    <a href="https://www.instagram.com/elipodcastproductions" aria-label="Instagram" class="social-icon instagram"></a>
+                    <a href="https://www.linkedin.com/in/elikampf" aria-label="LinkedIn" class="social-icon linkedin"></a>
+                    <a href="https://twitter.com/elipodcasts" aria-label="Twitter" class="social-icon twitter"></a>
+                    <a href="https://www.youtube.com/c/elipodcastproductions" aria-label="YouTube" class="social-icon youtube"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-trail"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+</html>
