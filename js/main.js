@@ -1,555 +1,620 @@
-/**
- * Eli Podcast Productions - Main JavaScript
- * Handles all interactive elements and animations
- */
+// ========================================
+// MAIN JAVASCRIPT - ELI PODCAST PRODUCTIONS
+// ========================================
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Remove loading screen after page loads
-    setTimeout(() => {
-        const loadingScreen = document.querySelector('.loading-screen');
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all components when DOM is fully loaded
+    initHeaderScroll();
+    initSoundWaveAnimation();
+    initTestimonialSlider();
+    initAudioSamples();
+    initParallaxBackground();
+    initServiceCardScroll();
+    
+    // Hide loading screen after everything is loaded
+    window.addEventListener('load', function() {
+        hideLoadingScreen();
+    });
+});
+
+// ---- LOADING SCREEN ----
+function hideLoadingScreen() {
+    const loadingScreen = document.querySelector('.loading-screen');
+    if (loadingScreen) {
         loadingScreen.style.opacity = '0';
         setTimeout(() => {
             loadingScreen.style.display = 'none';
         }, 400);
-    }, 800);
+    }
+}
 
-    // Initialize all components
-    initHeader();
-    initCustomCursor();
-    initHeroWaveAnimation();
-    initServicesScroll();
-    initPortfolioFilters();
-    initPortfolioAudio();
-    initTestimonialSlider();
-    initScrollAnimations();
-});
-
-/**
- * Header scroll effect
- */
-function initHeader() {
+// ---- HEADER SCROLL EFFECT ----
+function initHeaderScroll() {
     const header = document.querySelector('.site-header');
+    const scrollThreshold = 100;
     
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
+    function handleScroll() {
+        if (window.scrollY > scrollThreshold) {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
         }
+    }
+    
+    // Initial check in case page is loaded scrolled down
+    handleScroll();
+    
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+}
+
+// ---- SOUND WAVE ANIMATION ----
+function initSoundWaveAnimation() {
+    const soundWaveContainer = document.querySelector('.sound-wave-animation');
+    if (!soundWaveContainer) return;
+    
+    // Create canvas for sound wave
+    const canvas = document.createElement('canvas');
+    canvas.width = soundWaveContainer.offsetWidth;
+    canvas.height = soundWaveContainer.offsetHeight;
+    soundWaveContainer.appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    const waveColor = '#e6b54c'; // Gold color
+    
+    let animationFrameId;
+    let mouseX = canvas.width / 2;
+    let mouseY = canvas.height / 2;
+    
+    // Wave properties
+    const waveCount = 3;
+    const waves = [];
+    
+    // Initialize waves
+    for (let i = 0; i < waveCount; i++) {
+        waves.push({
+            frequency: 0.005 + (i * 0.002),
+            amplitude: 15 + (i * 5),
+            speed: 0.05 + (i * 0.01),
+            phase: 0
+        });
+    }
+    
+    // Handle mouse movement
+    soundWaveContainer.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
     });
-
-    // Mobile menu toggle
-    const menuToggle = document.querySelector('.mobile-menu-toggle');
-    const mobileNav = document.createElement('div');
-    mobileNav.classList.add('mobile-navigation');
-    mobileNav.innerHTML = document.querySelector('.main-navigation').innerHTML;
-    document.body.appendChild(mobileNav);
-
-    menuToggle.addEventListener('click', () => {
-        menuToggle.classList.toggle('active');
-        mobileNav.classList.toggle('active');
-        document.body.classList.toggle('menu-open');
-
-        if (menuToggle.classList.contains('active')) {
-            menuToggle.querySelector('span:first-child').style.transform = 'translateY(9px) rotate(45deg)';
-            menuToggle.querySelector('span:nth-child(2)').style.opacity = '0';
-            menuToggle.querySelector('span:last-child').style.transform = 'translateY(-9px) rotate(-45deg)';
-        } else {
-            menuToggle.querySelector('span:first-child').style.transform = 'none';
-            menuToggle.querySelector('span:nth-child(2)').style.opacity = '1';
-            menuToggle.querySelector('span:last-child').style.transform = 'none';
-        }
-    });
-}
-
-/**
- * Custom cursor effects
- */
-function initCustomCursor() {
-    const cursor = document.querySelector('.custom-cursor');
-    const cursorDot = document.querySelector('.cursor-dot');
-    const cursorTrail = document.querySelector('.cursor-trail');
     
-    if (!isTouchDevice()) {
-        document.addEventListener('mousemove', (e) => {
-            // Position the cursor elements
-            cursorDot.style.left = `${e.clientX}px`;
-            cursorDot.style.top = `${e.clientY}px`;
+    function drawWave() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw each wave
+        waves.forEach((wave, index) => {
+            ctx.beginPath();
             
-            // The trail follows with a slight delay
-            setTimeout(() => {
-                cursorTrail.style.left = `${e.clientX}px`;
-                cursorTrail.style.top = `${e.clientY}px`;
-            }, 100);
-        });
-
-        // Change cursor style on interactive elements
-        const interactiveElements = document.querySelectorAll('a, button, [data-cursor-interactive]');
-        
-        interactiveElements.forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                cursorDot.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                cursorTrail.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                cursorTrail.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--gold');
-            });
+            // Update phase for animation
+            wave.phase += wave.speed;
             
-            element.addEventListener('mouseleave', () => {
-                cursorDot.style.transform = 'translate(-50%, -50%) scale(1)';
-                cursorTrail.style.transform = 'translate(-50%, -50%) scale(0.8)';
-                cursorTrail.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--gold');
-            });
-        });
-    } else {
-        // Hide custom cursor on touch devices
-        cursor.style.display = 'none';
-    }
-}
-
-/**
- * Hero section sound wave animation
- */
-function initHeroWaveAnimation() {
-    const waveAnimation = document.querySelector('.sound-wave-animation.interactive');
-    
-    if (waveAnimation) {
-        // Create dynamic sound wave animation
-        let waveHTML = '';
-        const bars = 32;
-        
-        for (let i = 0; i < bars; i++) {
-            const height = Math.floor(Math.random() * 30) + 10;
-            waveHTML += `<div class="wave-bar" style="height:${height}px;animation-delay:${i * 0.05}s"></div>`;
-        }
-        
-        waveAnimation.innerHTML = waveHTML;
-        
-        // Make it react to cursor or random animation when mouse is not over it
-        if (!isTouchDevice()) {
-            waveAnimation.addEventListener('mousemove', (e) => {
-                const rect = waveAnimation.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const waveBars = waveAnimation.querySelectorAll('.wave-bar');
+            // Calculate wave path
+            for (let x = 0; x < canvas.width; x++) {
+                // Calculate distance from mouse for reactive effect
+                const distanceFromMouse = Math.abs(x - mouseX) / (canvas.width / 2);
+                const mouseInfluence = Math.max(0, 1 - distanceFromMouse);
                 
-                waveBars.forEach((bar, index) => {
-                    const barCenter = (index / waveBars.length) * rect.width;
-                    const distance = Math.abs(x - barCenter);
-                    const maxHeight = 50;
-                    const minHeight = 5;
-                    
-                    // Calculate height based on distance from cursor
-                    const height = maxHeight - (distance / (rect.width / 4) * (maxHeight - minHeight));
-                    bar.style.height = `${Math.max(minHeight, Math.min(maxHeight, height))}px`;
-                });
-            });
-            
-            waveAnimation.addEventListener('mouseleave', () => {
-                // Return to random animation
-                const waveBars = waveAnimation.querySelectorAll('.wave-bar');
+                // Calculate y position with mouse influence
+                const baseAmplitude = wave.amplitude * (1 + mouseInfluence * 0.5);
+                const y = canvas.height / 2 + 
+                          Math.sin(x * wave.frequency + wave.phase) * 
+                          baseAmplitude;
                 
-                waveBars.forEach(bar => {
-                    bar.style.height = '';
-                });
-            });
-        }
-    }
-}
-
-/**
- * Horizontal services scroll functionality
- */
-function initServicesScroll() {
-    const scrollContainer = document.querySelector('.services-cards');
-    const leftButton = document.querySelector('.scroll-left');
-    const rightButton = document.querySelector('.scroll-right');
-    const scrollDots = document.querySelector('.scroll-dots');
-    
-    if (scrollContainer && leftButton && rightButton) {
-        // Create dots based on how many "screens" of content there are
-        const containerWidth = scrollContainer.clientWidth;
-        const scrollWidth = scrollContainer.scrollWidth;
-        const screens = Math.ceil(scrollWidth / containerWidth);
-        
-        // Generate dots
-        let dotsHTML = '';
-        for (let i = 0; i < screens; i++) {
-            dotsHTML += `<button class="scroll-dot ${i === 0 ? 'active' : ''}" data-index="${i}" aria-label="Page ${i + 1}"></button>`;
-        }
-        scrollDots.innerHTML = dotsHTML;
-        
-        // Handle dot clicks
-        const dots = scrollDots.querySelectorAll('.scroll-dot');
-        dots.forEach(dot => {
-            dot.addEventListener('click', () => {
-                const index = parseInt(dot.dataset.index);
-                scrollToPosition(index);
-                updateActiveDot(index);
-            });
-        });
-        
-        // Handle button clicks
-        leftButton.addEventListener('click', () => {
-            const activeDot = scrollDots.querySelector('.scroll-dot.active');
-            const activeIndex = parseInt(activeDot.dataset.index);
-            const newIndex = Math.max(0, activeIndex - 1);
-            
-            scrollToPosition(newIndex);
-            updateActiveDot(newIndex);
-        });
-        
-        rightButton.addEventListener('click', () => {
-            const activeDot = scrollDots.querySelector('.scroll-dot.active');
-            const activeIndex = parseInt(activeDot.dataset.index);
-            const newIndex = Math.min(screens - 1, activeIndex + 1);
-            
-            scrollToPosition(newIndex);
-            updateActiveDot(newIndex);
-        });
-        
-        // Handle scroll events
-        scrollContainer.addEventListener('scroll', () => {
-            const scrollPosition = scrollContainer.scrollLeft;
-            const scrollIndex = Math.round(scrollPosition / containerWidth);
-            
-            updateActiveDot(scrollIndex);
-        });
-        
-        // Scroll to position helper
-        function scrollToPosition(index) {
-            const position = index * containerWidth;
-            scrollContainer.scrollTo({
-                left: position,
-                behavior: 'smooth'
-            });
-        }
-        
-        // Update active dot helper
-        function updateActiveDot(index) {
-            dots.forEach(dot => dot.classList.remove('active'));
-            dots[index].classList.add('active');
-            
-            // Update button states
-            leftButton.style.opacity = index === 0 ? '0.5' : '1';
-            rightButton.style.opacity = index === screens - 1 ? '0.5' : '1';
-        }
-        
-        // Initial button states
-        leftButton.style.opacity = '0.5';
-    }
-}
-
-/**
- * Portfolio filters functionality
- */
-function initPortfolioFilters() {
-    const filterButtons = document.querySelectorAll('.filter-button');
-    const portfolioItems = document.querySelectorAll('.portfolio-item');
-    
-    if (filterButtons.length && portfolioItems.length) {
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Update active button
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                
-                const filter = button.dataset.filter;
-                
-                // Filter items
-                if (filter === 'all') {
-                    portfolioItems.forEach(item => {
-                        item.style.display = 'block';
-                        // Trigger re-animation
-                        item.style.animation = 'none';
-                        setTimeout(() => {
-                            item.style.animation = '';
-                        }, 10);
-                    });
+                if (x === 0) {
+                    ctx.moveTo(x, y);
                 } else {
-                    portfolioItems.forEach(item => {
-                        if (item.dataset.category === filter) {
-                            item.style.display = 'block';
-                            // Trigger re-animation
-                            item.style.animation = 'none';
-                            setTimeout(() => {
-                                item.style.animation = '';
-                            }, 10);
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
+                    ctx.lineTo(x, y);
                 }
-            });
-        });
-    }
-}
-
-/**
- * Portfolio audio player functionality
- */
-function initPortfolioAudio() {
-    const portfolioItems = document.querySelectorAll('.portfolio-item');
-    let currentAudio = null;
-    let currentPlayButton = null;
-    
-    portfolioItems.forEach(item => {
-        const playButton = item.querySelector('.play-button');
-        const waveform = item.querySelector('.waveform-visualization');
-        
-        if (playButton && waveform) {
-            const audioSrc = waveform.dataset.audio;
-            
-            if (audioSrc) {
-                const audio = new Audio(audioSrc);
-                
-                playButton.addEventListener('click', () => {
-                    // Stop any currently playing audio
-                    if (currentAudio && currentAudio !== audio) {
-                        currentAudio.pause();
-                        currentAudio.currentTime = 0;
-                        resetPlayButton(currentPlayButton);
-                    }
-                    
-                    if (audio.paused) {
-                        audio.play();
-                        playButton.classList.add('playing');
-                        playButton.innerHTML = '';
-                        
-                        // Create pause icon
-                        const pauseIcon = document.createElement('span');
-                        pauseIcon.classList.add('pause-icon');
-                        playButton.appendChild(pauseIcon);
-                        
-                        // Animate waveform
-                        waveform.classList.add('playing');
-                        
-                        currentAudio = audio;
-                        currentPlayButton = playButton;
-                    } else {
-                        audio.pause();
-                        resetPlayButton(playButton);
-                    }
-                });
-                
-                // Reset when audio ends
-                audio.addEventListener('ended', () => {
-                    resetPlayButton(playButton);
-                });
             }
-        }
+            
+            // Style and draw the wave
+            ctx.strokeStyle = waveColor;
+            ctx.lineWidth = 2 - (index * 0.5);
+            ctx.stroke();
+            
+            // Add slight transparency
+            ctx.globalAlpha = 0.7 - (index * 0.2);
+        });
+        
+        // Reset alpha
+        ctx.globalAlpha = 1;
+        
+        // Continue animation loop
+        animationFrameId = requestAnimationFrame(drawWave);
+    }
+    
+    // Start animation
+    drawWave();
+    
+    // Handle resize
+    window.addEventListener('resize', () => {
+        canvas.width = soundWaveContainer.offsetWidth;
+        canvas.height = soundWaveContainer.offsetHeight;
     });
     
-    function resetPlayButton(button) {
-        if (button) {
-            button.classList.remove('playing');
-            button.innerHTML = '';
-            const waveform = button.closest('.portfolio-overlay').querySelector('.waveform-visualization');
-            if (waveform) {
-                waveform.classList.remove('playing');
-            }
-        }
-    }
+    // Cleanup function
+    return () => {
+        cancelAnimationFrame(animationFrameId);
+    };
 }
 
-/**
- * Testimonial slider functionality
- */
+// ---- TESTIMONIAL SLIDER ----
 function initTestimonialSlider() {
     const slides = document.querySelectorAll('.testimonial-slide');
     const dots = document.querySelectorAll('.testimonial-dot');
     let currentSlide = 0;
-    let interval;
+    let slideInterval;
     
-    if (slides.length && dots.length) {
-        // Set up automatic rotation
-        startAutoRotation();
+    // Skip if no slides
+    if (!slides.length) return;
+    
+    function showSlide(index) {
+        // Hide all slides
+        slides.forEach(slide => {
+            slide.classList.remove('active');
+        });
         
-        // Handle dot clicks
+        // Deactivate all dots
         dots.forEach(dot => {
-            dot.addEventListener('click', () => {
-                const slideIndex = parseInt(dot.dataset.slide);
-                goToSlide(slideIndex);
-                resetAutoRotation();
-            });
+            dot.classList.remove('active');
         });
         
-        // Auto-rotation functions
-        function startAutoRotation() {
-            interval = setInterval(() => {
-                const nextSlide = (currentSlide + 1) % slides.length;
-                goToSlide(nextSlide);
-            }, 5000);
-        }
+        // Show current slide and activate current dot
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
         
-        function resetAutoRotation() {
-            clearInterval(interval);
-            startAutoRotation();
+        // Update current slide index
+        currentSlide = index;
+    }
+    
+    // Initialize dots click handlers
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            showSlide(index);
+            resetInterval();
+        });
+    });
+    
+    function nextSlide() {
+        let next = currentSlide + 1;
+        if (next >= slides.length) {
+            next = 0;
         }
+        showSlide(next);
+    }
+    
+    function resetInterval() {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 5000);
+    }
+    
+    // Start automatic sliding
+    resetInterval();
+    
+    // Pause on hover
+    const sliderContainer = document.querySelector('.testimonials-slider');
+    if (sliderContainer) {
+        sliderContainer.addEventListener('mouseenter', () => {
+            clearInterval(slideInterval);
+        });
         
-        // Go to specific slide
-        function goToSlide(index) {
-            slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
-            
-            slides[index].classList.add('active');
-            dots[index].classList.add('active');
-            
-            currentSlide = index;
-        }
+        sliderContainer.addEventListener('mouseleave', resetInterval);
     }
 }
 
-/**
- * Scroll-triggered animations
- */
-function initScrollAnimations() {
-    const animatedElements = document.querySelectorAll('[data-animation]');
+// ---- AUDIO SAMPLES AND WAVEFORM VISUALIZATION ----
+function initAudioSamples() {
+    const audioButtons = document.querySelectorAll('.audio-play-button');
+    let currentAudio = null;
+    let currentWaveform = null;
     
-    if ('IntersectionObserver' in window && animatedElements.length) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const element = entry.target;
-                    const animation = element.dataset.animation;
-                    const delay = element.dataset.delay || 0;
+    audioButtons.forEach(button => {
+        const waveformEl = button.parentElement.querySelector('.waveform-visualization');
+        const audioSrc = waveformEl.getAttribute('data-audio');
+        
+        if (!audioSrc) return;
+        
+        // Create audio element
+        const audio = new Audio(audioSrc);
+        audio.preload = 'metadata';
+        
+        // Create waveform visualization
+        const waveform = createWaveform(waveformEl, audio);
+        
+        // Set up play button
+        button.addEventListener('click', () => {
+            if (currentAudio && currentAudio !== audio) {
+                // Stop any currently playing audio
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                currentWaveform.pause();
+                
+                // Reset play button
+                const currentButton = document.querySelector('.audio-play-button.playing');
+                if (currentButton) {
+                    currentButton.classList.remove('playing');
+                    currentButton.innerHTML = '';
                     
-                    setTimeout(() => {
-                        element.style.animation = `${animation} 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards`;
-                    }, delay * 1000);
-                    
-                    observer.unobserve(element);
+                    // Restore play triangle
+                    const playTriangle = document.createElement('span');
+                    playTriangle.classList.add('play-icon');
+                    currentButton.appendChild(playTriangle);
                 }
-            });
-        }, {
-            threshold: 0.1
+            }
+            
+            if (audio.paused) {
+                // Play this audio
+                audio.play();
+                waveform.play();
+                button.classList.add('playing');
+                
+                // Change button to pause icon
+                button.innerHTML = '';
+                const pauseIcon = document.createElement('span');
+                pauseIcon.classList.add('pause-icon');
+                button.appendChild(pauseIcon);
+                
+                // Update current audio reference
+                currentAudio = audio;
+                currentWaveform = waveform;
+            } else {
+                // Pause this audio
+                audio.pause();
+                waveform.pause();
+                button.classList.remove('playing');
+                
+                // Change button back to play icon
+                button.innerHTML = '';
+                const playTriangle = document.createElement('span');
+                playTriangle.classList.add('play-icon');
+                button.appendChild(playTriangle);
+                
+                currentAudio = null;
+                currentWaveform = null;
+            }
         });
         
-        animatedElements.forEach(element => {
-            element.style.opacity = '0';
-            observer.observe(element);
+        // Handle audio ended
+        audio.addEventListener('ended', () => {
+            button.classList.remove('playing');
+            
+            // Change button back to play icon
+            button.innerHTML = '';
+            const playTriangle = document.createElement('span');
+            playTriangle.classList.add('play-icon');
+            button.appendChild(playTriangle);
+            
+            currentAudio = null;
+            currentWaveform = null;
         });
+    });
+}
+
+function createWaveform(container, audio) {
+    // Create canvas for waveform
+    const canvas = document.createElement('canvas');
+    canvas.width = container.offsetWidth;
+    canvas.height = container.offsetHeight;
+    container.appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    const waveColor = '#e6b54c'; // Gold color
+    
+    // Simulated waveform data - would be generated from actual audio analysis in production
+    const sampleCount = 30;
+    const samples = [];
+    
+    // Generate random samples for visualization
+    for (let i = 0; i < sampleCount; i++) {
+        samples.push(Math.random() * 0.8 + 0.2); // Values between 0.2 and 1.0
+    }
+    
+    let animationFrameId;
+    let isPlaying = false;
+    let currentPosition = 0;
+    
+    function drawWaveform() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        const barWidth = canvas.width / sampleCount;
+        const barMaxHeight = canvas.height;
+        
+        // Draw each frequency bar
+        for (let i = 0; i < sampleCount; i++) {
+            const x = i * barWidth;
+            
+            // Determine if this bar is "active" based on current position
+            const progress = audio.currentTime / audio.duration;
+            const isActive = i / sampleCount <= progress;
+            
+            // Calculate height with slight randomization when playing
+            let amplitude = samples[i];
+            if (isPlaying && isActive) {
+                // Add subtle animation to active bars
+                amplitude *= 0.9 + Math.sin(Date.now() * 0.01 + i) * 0.1;
+            }
+            
+            const height = amplitude * barMaxHeight;
+            const y = (canvas.height - height) / 2;
+            
+            // Draw bar
+            ctx.fillStyle = isActive ? waveColor : 'rgba(255,255,255,0.5)';
+            ctx.fillRect(x, y, barWidth - 2, height);
+        }
+        
+        if (isPlaying) {
+            animationFrameId = requestAnimationFrame(drawWaveform);
+        }
+    }
+    
+    // Initial draw
+    drawWaveform();
+    
+    return {
+        play: function() {
+            isPlaying = true;
+            drawWaveform();
+        },
+        pause: function() {
+            isPlaying = false;
+            cancelAnimationFrame(animationFrameId);
+        }
+    };
+}
+
+// ---- PARALLAX BACKGROUND EFFECT ----
+function initParallaxBackground() {
+    const parallaxContainer = document.querySelector('.parallax-background');
+    if (!parallaxContainer) return;
+    
+    // Create canvas for parallax background
+    const canvas = document.createElement('canvas');
+    canvas.width = parallaxContainer.offsetWidth;
+    canvas.height = parallaxContainer.offsetHeight;
+    parallaxContainer.appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    
+    // Create sound wave background
+    const waveCount = 5;
+    const waves = [];
+    
+    // Initialize waves with different properties
+    for (let i = 0; i < waveCount; i++) {
+        waves.push({
+            frequency: 0.002 + (i * 0.001),
+            amplitude: 20 + (i * 10),
+            speed: 0.02 + (i * 0.005),
+            phase: 0,
+            color: `rgba(230, 181, 76, ${0.1 - (i * 0.015)})` // Gold with decreasing opacity
+        });
+    }
+    
+    let animationFrameId;
+    let scrollOffset = 0;
+    
+    // Update scroll offset on window scroll
+    window.addEventListener('scroll', () => {
+        const rect = parallaxContainer.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < window.innerHeight) {
+            scrollOffset = rect.top / window.innerHeight;
+        }
+    });
+    
+    function drawParallax() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw each wave
+        waves.forEach((wave, index) => {
+            ctx.beginPath();
+            
+            // Update phase for animation
+            wave.phase += wave.speed;
+            
+            // Calculate parallax effect based on scroll
+            const parallaxAmount = index * 20 * scrollOffset;
+            
+            // Calculate wave path
+            for (let x = 0; x < canvas.width; x += 5) {
+                const y = (canvas.height / 2) + 
+                          parallaxAmount +
+                          Math.sin(x * wave.frequency + wave.phase) * 
+                          wave.amplitude;
+                
+                if (x === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            
+            // Style and draw the wave
+            ctx.strokeStyle = wave.color;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        });
+        
+        // Continue animation loop
+        animationFrameId = requestAnimationFrame(drawParallax);
+    }
+    
+    // Start animation
+    drawParallax();
+    
+    // Handle resize
+    window.addEventListener('resize', () => {
+        canvas.width = parallaxContainer.offsetWidth;
+        canvas.height = parallaxContainer.offsetHeight;
+    });
+    
+    // Cleanup function
+    return () => {
+        cancelAnimationFrame(animationFrameId);
+    };
+}
+
+// ---- SERVICE CARD SCROLL INTERACTION ----
+function initServiceCardScroll() {
+    const serviceContainer = document.querySelector('.services-scroll-container');
+    if (!serviceContainer) return;
+    
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    
+    // Mouse events
+    serviceContainer.addEventListener('mousedown', (e) => {
+        isDown = true;
+        serviceContainer.classList.add('active');
+        startX = e.pageX - serviceContainer.offsetLeft;
+        scrollLeft = serviceContainer.scrollLeft;
+    });
+    
+    serviceContainer.addEventListener('mouseleave', () => {
+        isDown = false;
+        serviceContainer.classList.remove('active');
+    });
+    
+    serviceContainer.addEventListener('mouseup', () => {
+        isDown = false;
+        serviceContainer.classList.remove('active');
+    });
+    
+    serviceContainer.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - serviceContainer.offsetLeft;
+        const walk = (x - startX) * 2; // Speed of scroll
+        serviceContainer.scrollLeft = scrollLeft - walk;
+    });
+    
+    // Touch events for mobile
+    serviceContainer.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].pageX - serviceContainer.offsetLeft;
+        scrollLeft = serviceContainer.scrollLeft;
+    });
+    
+    serviceContainer.addEventListener('touchmove', (e) => {
+        if (e.touches.length !== 1) return;
+        const x = e.touches[0].pageX - serviceContainer.offsetLeft;
+        const walk = (x - startX) * 2;
+        serviceContainer.scrollLeft = scrollLeft - walk;
+    });
+}
+
+// ---- SCROLL REVEAL ANIMATIONS ----
+function initScrollReveal() {
+    const revealElements = document.querySelectorAll('.reveal');
+    
+    function checkReveal() {
+        const windowHeight = window.innerHeight;
+        const revealPoint = 150;
+        
+        revealElements.forEach(element => {
+            const revealTop = element.getBoundingClientRect().top;
+            
+            if (revealTop < windowHeight - revealPoint) {
+                element.classList.add('active');
+            }
+        });
+    }
+    
+    // Initial check
+    checkReveal();
+    
+    // Check on scroll
+    window.addEventListener('scroll', checkReveal);
+}
+
+// ---- MOBILE MENU TOGGLE ----
+function initMobileMenu() {
+    const menuButton = document.querySelector('.mobile-menu-toggle');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    
+    if (!menuButton || !mobileMenu) return;
+    
+    menuButton.addEventListener('click', () => {
+        menuButton.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        document.body.classList.toggle('menu-open'); // Prevent scrolling when menu is open
+    });
+    
+    // Close menu when clicking links
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            menuButton.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        });
+    });
+}
+
+// Add mobile menu HTML to the page programmatically
+function addMobileMenu() {
+    // Check if we're on mobile viewport
+    if (window.innerWidth > 768) return;
+    
+    const header = document.querySelector('.site-header');
+    if (!header) return;
+    
+    // Create mobile menu button if it doesn't exist
+    if (!document.querySelector('.mobile-menu-toggle')) {
+        const menuButton = document.createElement('button');
+        menuButton.classList.add('mobile-menu-toggle');
+        menuButton.setAttribute('aria-label', 'Toggle mobile menu');
+        menuButton.innerHTML = `
+            <span class="menu-bar"></span>
+            <span class="menu-bar"></span>
+            <span class="menu-bar"></span>
+        `;
+        
+        // Get the navigation items
+        const mainNav = document.querySelector('.main-navigation');
+        const navItems = mainNav ? mainNav.innerHTML : '';
+        
+        // Create mobile menu
+        const mobileMenu = document.createElement('div');
+        mobileMenu.classList.add('mobile-menu');
+        mobileMenu.innerHTML = navItems;
+        
+        // Add to header
+        header.querySelector('.header-container').appendChild(menuButton);
+        header.appendChild(mobileMenu);
+        
+        // Initialize mobile menu functionality
+        initMobileMenu();
     }
 }
 
-/**
- * Utility function to detect touch devices
- */
-function isTouchDevice() {
-    return (('ontouchstart' in window) ||
-            (navigator.maxTouchPoints > 0) ||
-            (navigator.msMaxTouchPoints > 0));
-}
-
-/**
- * Add CSS styles for elements created in JS
- */
-(function addDynamicStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
-        /* Mobile Navigation */
-        .mobile-navigation {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100vh;
-            background-color: var(--navy);
-            z-index: 99;
-            padding: 80px 30px 30px;
-            transition: right 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .mobile-navigation.active {
-            right: 0;
-        }
-        
-        .mobile-navigation ul {
-            flex-direction: column;
-        }
-        
-        .mobile-navigation li {
-            margin: 0 0 20px;
-        }
-        
-        .mobile-navigation a {
-            display: block;
-            padding: 10px 0;
-        }
-        
-        body.menu-open::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 98;
-        }
-        
-        /* Sound Wave Animation */
-        .sound-wave-animation.interactive {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-        }
-        
-        .wave-bar {
-            width: 3px;
-            background-color: var(--gold);
-            border-radius: 2px;
-            animation: waveAnimation 1s infinite alternate ease-in-out;
-        }
-        
-        @keyframes waveAnimation {
-            0% {
-                height: 10px;
-            }
-            100% {
-                height: 30px;
-            }
-        }
-        
-        /* Waveform visualization */
-        .waveform-visualization.playing {
-            animation: waveformAnimation 2s infinite linear;
-        }
-        
-        @keyframes waveformAnimation {
-            0% {
-                background-position: 0% center;
-            }
-            100% {
-                background-position: 100% center;
-            }
-        }
-        
-        /* Pause icon */
-        .pause-icon {
-            position: relative;
-            width: 20px;
-            height: 20px;
-        }
-        
-        .pause-icon::before,
-        .pause-icon::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 20px;
-            background-color: var(--navy);
-            border-radius: 2px;
-        }
-        
-        .pause-icon::before {
-            left: 4px;
-        }
-        
-        .pause-icon::after {
-            right: 4px;
-        }
-    `;
+// Initialize everything that needs the DOM to be ready
+window.addEventListener('DOMContentLoaded', () => {
+    initHeaderScroll();
+    initSoundWaveAnimation();
+    initTestimonialSlider();
+    initAudioSamples();
+    initParallaxBackground();
+    initServiceCardScroll();
+    initScrollReveal();
     
-    document.head.appendChild(style);
-})();
+    // Add and initialize mobile menu
+    addMobileMenu();
+    
+    // Hide loading screen when everything is fully loaded
+    window.addEventListener('load', hideLoadingScreen);
+    
+    // Handle resize events
+    window.addEventListener('resize', () => {
+        // Check if we need to add mobile menu
+        addMobileMenu();
+    });
+});
